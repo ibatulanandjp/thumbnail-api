@@ -1,0 +1,28 @@
+{
+  "name": "thumbnail-api",
+  "version": "1.0.0",
+  "description": "Project to build a long-running job API for image thumbnail generation.",
+  "main": "index.js",
+  "scripts": {
+    "server": "node src/server.js",
+    "worker": "node src/jobs/worker.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Atul Anand",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongodb": "^5.5.0",
+    "multer": "^1.4.5-lts.1",
+    "sharp": "^0.32.1",
+    "uuid": "^9.0.0",
+    "winston": "^3.8.2",
+    "winston-daily-rotate-file": "^4.7.1"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0"
+  }
+}
