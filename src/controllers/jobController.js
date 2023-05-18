@@ -1,6 +1,7 @@
 const jobModel = require('../models/job');
 const logger = require('../../logging/config/logger');
 const { enqueue } = require('../jobs/queue');
+const fs = require('fs');
 const path = require('path');
 
 /**
@@ -100,6 +101,12 @@ async function getThumbnail(req, res) {
             '../../public/thumbnails',
             `${id}.jpg`
         );
+
+        // If the thumbnail file doesn't exist at the thumbnail path
+        if (!fs.existsSync(thumbnailPath)) {
+            return res.status(404).json({ error: 'Thumbnail not found' });
+        }
+
         res.sendFile(thumbnailPath);
     } catch (error) {
         logger.error(`Error getting thumbnail: ${error}`);
