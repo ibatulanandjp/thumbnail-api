@@ -1,6 +1,7 @@
 const jobModel = require('../models/job');
 const logger = require('../../logging/config/logger');
 const { enqueue } = require('../jobs/queue');
+const path = require('path');
 
 /**
  * Controller Function to create job
@@ -72,19 +73,34 @@ async function getJobStatus(req, res) {
  */
 async function getThumbnail(req, res) {
     try {
-        const { jobId } = req.params;
+        const { id } = req.params;
+        // console.log('Request Parameter: ', req.params);
+        logger.info(`Checking status of the job with id: ${id}`);
 
         // Retrieve the job from the database
-        const job = await jobModel.getJobById(jobId);
+        const job = await jobModel.getJobById(id);
 
-        // If the job doesn't exist or is not completed, return an error response
-        if (!job || job.status !== 'succeeded') {
-            return res.status(400).json({
-                error: 'Job not found or thumbnail generation has not completed',
+        // If the job doesn't exist, return an error response
+        if (!job) {
+            return res.status(404).json({
+                error: 'Job not found',
             });
         }
 
-        // TODO: Implementation for retrieving and sending thumbnail image to the user
+        // If the job is not complete, return an error response
+        if (job.status !== 'succeeded') {
+            return res.status(400).json({
+                error: 'Thumbnail generation has not completed',
+            });
+        }
+
+        // Retrieve and send thumbnail image to the user
+        const thumbnailPath = path.join(
+            __dirname,
+            '../../public/thumbnails',
+            `${id}.jpg`
+        );
+        res.sendFile(thumbnailPath);
     } catch (error) {
         logger.error(`Error getting thumbnail: ${error}`);
         res.status(500).json({
