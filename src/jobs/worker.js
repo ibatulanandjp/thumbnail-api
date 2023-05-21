@@ -9,6 +9,9 @@ const logger = require('../../logging/config/logger');
 
 let channel;
 
+/**
+ * Function to process message from the queue
+ */
 async function processMessage() {
     try {
         channel = await connect();
@@ -26,6 +29,11 @@ async function processMessage() {
     }
 }
 
+/**
+ * Function to consume message and generate thumbnail
+ * @param message - Message to process
+ * @param channel - Channel
+ */
 async function consumeMessage(message, channel) {
     try {
         if (!message) {
@@ -77,10 +85,39 @@ async function consumeMessage(message, channel) {
         channel.ack(message);
     } catch (error) {
         logger.error(`Error processing job: ${error}`);
-        // await jobModel.updateJobStatus(jobId, 'failed');
+        await jobModel.updateJobStatus(jobId, 'failed');
 
         channel.reject(message);
     }
 }
 
-processMessage();
+/**
+ * Function to close connection
+ */
+async function closeConnection() {
+    if (channel) {
+        await channel.close();
+    }
+}
+
+/**
+ * Function to handle graceful shutdown
+ */
+function handleShutdown() {
+    // Clean up resources, perform cleanup tasks, etc.
+    process.env.IS_WORKER_RUNNING = 'false';
+    process.exit();
+}
+
+// Only start the worker process if it's not already running
+if (process.env.IS_WORKER_RUNNING == 'false') {
+    process.env.IS_WORKER_RUNNING = 'true';
+    processMessage();
+}
+
+process.on('SIGINT', handleShutdown);
+process.on('SIGTERM', handleShutdown);
+
+module.exports = {
+    closeConnection,
+};

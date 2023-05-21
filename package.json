@@ -4,9 +4,9 @@
   "description": "Project to build a long-running job API for image thumbnail generation.",
   "main": "index.js",
   "scripts": {
-    "server": "node src/server.js",
+    "start": "node src/server.js",
     "worker": "node src/jobs/worker.js",
-    "test": "jest"
+    "test": "jest --verbose --detectOpenHandles --runInBand"
   },
   "keywords": [],
   "author": "Atul Anand",
@@ -23,6 +23,12 @@
     "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
-    "jest": "^29.5.0"
+    "jest": "^29.5.0",
+    "supertest": "^6.3.3"
+  },
+  "jest": {
+    "testMatch": [
+      "**/test/**/*.test.js"
+    ]
   }
 }

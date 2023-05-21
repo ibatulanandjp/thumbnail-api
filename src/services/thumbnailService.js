@@ -17,7 +17,7 @@ async function generateThumbnail(imageBuffer, width, height, thumbnailPath) {
 
         return thumbnail;
     } catch (error) {
-        logger.error('Error generating thumbnail: ', error);
+        logger.error(`Error generating thumbnail: ${error}`);
     }
 }
 

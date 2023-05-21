@@ -1,19 +1,8 @@
 'use strict';
 
-const express = require('express');
-const routes = require('./routes/jobRoutes');
+const app = require('./app');
 const { connect } = require('./jobs/queue');
-const path = require('path');
 const logger = require('../logging/config/logger');
-
-// Express App
-const app = express();
-
-// Serve static files from the public directory
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Routes - base path for all API endpoints
-app.use('/api', routes);
 
 // Start the server
 const port = process.env.PORT || 3000;

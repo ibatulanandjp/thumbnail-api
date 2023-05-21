@@ -3,7 +3,7 @@ const logger = require('../../logging/config/logger');
 const { uri, dbName, collectionName } = require('../config/db');
 
 /**
- * Function to connect to the MongoDB Server and return database connection
+ * Function to connect to the MongoDB and return database connection
  * @returns Database instance
  */
 async function connect() {
@@ -11,9 +11,22 @@ async function connect() {
         const client = await MongoClient.connect(uri);
         const db = client.db(dbName);
         logger.info('Connected to database successfully');
-        return db;
+        return { client, db };
     } catch (error) {
         logger.error(`Error connecting to the database: ${error}`);
+    }
+}
+
+/**
+ * Function to disconnect from the database
+ * @param client - MongoDB Client
+ */
+async function disconnect(client) {
+    try {
+        await client.close();
+        logger.info('Disconnected from the database successfully');
+    } catch (error) {
+        logger.error(`Error disconnecting from the database: ${error}`);
     }
 }
 
@@ -24,7 +37,7 @@ async function connect() {
  */
 async function createJob(imageFilename) {
     try {
-        const db = await connect();
+        const { client, db } = await connect();
         const job = {
             imageFilename,
             status: 'processing',
@@ -35,6 +48,9 @@ async function createJob(imageFilename) {
         logger.info(
             `Created a new job in the database with the id: ${result.insertedId}`
         );
+
+        // Disconnect from the database
+        await disconnect(client);
 
         return result.insertedId;
     } catch (error) {
@@ -49,10 +65,12 @@ async function createJob(imageFilename) {
  */
 async function getJobById(jobId) {
     try {
-        const db = await connect();
+        const { client, db } = await connect();
         const job = await db.collection(collectionName).findOne({
             _id: new ObjectId(jobId),
         });
+        // Disconnect from the database
+        await disconnect(client);
         return job;
     } catch (error) {
         logger.error(`Error getting job by Id from the database: ${error}`);
@@ -67,7 +85,7 @@ async function getJobById(jobId) {
  */
 async function updateJobStatus(jobId, status) {
     try {
-        const db = await connect();
+        const { client, db } = await connect();
         const result = await db.collection(collectionName).updateOne(
             {
                 _id: new ObjectId(jobId),
@@ -77,6 +95,8 @@ async function updateJobStatus(jobId, status) {
             }
         );
         logger.info(`Updated the status of the job : ${jobId}`);
+        // Disconnect from the database
+        await disconnect(client);
         return result.modifiedCount === 1;
     } catch (error) {
         logger.error(`Error updating job status in the database: ${error}`);
@@ -89,13 +109,36 @@ async function updateJobStatus(jobId, status) {
  */
 async function getAllJobs() {
     try {
-        const db = await connect();
+        const { client, db } = await connect();
         const jobs = await db.collection(collectionName).find().toArray();
 
         logger.info('Retrieved the list of jobs');
+        // Disconnect from the database
+        await disconnect(client);
         return jobs;
     } catch (error) {
         logger.error(`Error getting all jobs from the database: ${error}`);
+    }
+}
+
+/**
+ * Function to delete job document from the database by specific Id
+ * @param jobId - Id of the job
+ * @returns Deleted job
+ */
+async function deleteJobById(jobId) {
+    try {
+        const { client, db } = await connect();
+
+        const result = await db.collection(collectionName).findOneAndDelete({
+            _id: new ObjectId(jobId),
+        });
+
+        // Disconnect from the database
+        await disconnect(client);
+        return result.value;
+    } catch (error) {
+        logger.error(`Error deleting job by Id from the database: ${error}`);
     }
 }
 
@@ -104,4 +147,5 @@ module.exports = {
     getJobById,
     updateJobStatus,
     getAllJobs,
+    deleteJobById,
 };

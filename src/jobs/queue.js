@@ -1,21 +1,29 @@
+const { fork } = require('child_process');
 const amqp = require('amqplib');
 const logger = require('../../logging/config/logger');
 const { uri, queueName } = require('../config/messagebroker');
 
-let channel;
+let connection, channel;
+let worker;
 
 /**
  * Function to connect to the Message Broker
+ * returns Channel
  */
 async function connect() {
     try {
-        const connection = await amqp.connect(uri);
+        connection = await amqp.connect(uri);
         channel = await connection.createChannel();
 
         // Create the queue if it does not exist
         await channel.assertQueue(queueName, { durable: true });
 
         logger.info('Connected to Message Broker');
+
+        if (process.env.IS_WORKER_RUNNING == 'false') {
+            logger.info('Creating a Child Worker Process');
+            worker = fork('./src/jobs/worker.js');
+        }
 
         return channel;
     } catch (error) {
@@ -42,7 +50,24 @@ async function enqueue(message) {
     }
 }
 
+/**
+ * Function to close connection
+ */
+async function closeConnection() {
+    if (channel) {
+        await channel.close();
+    }
+    if (connection) {
+        await connection.close();
+    }
+    if (worker && process.env.IS_WORKER_RUNNING === 'true') {
+        worker.kill();
+        process.env.IS_WORKER_RUNNING = 'false';
+    }
+}
+
 module.exports = {
     connect,
     enqueue,
+    closeConnection,
 };

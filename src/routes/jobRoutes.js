@@ -17,4 +17,7 @@ router.get('/job/:id/thumbnail', jobController.getThumbnail);
 // Route for listing all the jobs
 router.get('/jobs', jobController.listJobs);
 
+// Route for deleting job by id
+router.delete('/job/:id', jobController.deleteJobById);
+
 module.exports = router;

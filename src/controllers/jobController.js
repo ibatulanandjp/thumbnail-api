@@ -6,8 +6,8 @@ const path = require('path');
 
 /**
  * Controller Function to create job
- * @param {*} req - Request parameters
- * @param {*} res - Response parameters
+ * @param req - Request parameters
+ * @param res - Response parameters
  */
 async function createJob(req, res) {
     try {
@@ -39,8 +39,8 @@ async function createJob(req, res) {
 
 /**
  * Controller Function to get job status
- * @param {*} req - Request parameters
- * @param {*} res - Response parameters
+ * @param req - Request parameters
+ * @param res - Response parameters
  * @returns Status of Job
  */
 async function getJobStatus(req, res) {
@@ -69,13 +69,12 @@ async function getJobStatus(req, res) {
 
 /**
  * Controller Function to get thumbnail
- * @param {*} req - Request parameters
- * @param {*} res - Response parameters
+ * @param req - Request parameters
+ * @param res - Response parameters
  */
 async function getThumbnail(req, res) {
     try {
         const { id } = req.params;
-        // console.log('Request Parameter: ', req.params);
         logger.info(`Checking status of the job with id: ${id}`);
 
         // Retrieve the job from the database
@@ -118,8 +117,8 @@ async function getThumbnail(req, res) {
 
 /**
  * Function to list all jobs
- * @param {*} req - Request parameters
- * @param {*} res - Response parameters
+ * @param req - Request parameters
+ * @param res - Response parameters
  */
 async function listJobs(req, res) {
     try {
@@ -138,9 +137,32 @@ async function listJobs(req, res) {
     }
 }
 
+async function deleteJobById(req, res) {
+    try {
+        const { id } = req.params;
+        logger.info(`Checking status of the job with id: ${id}`);
+
+        // Find the job by ID and delete it
+        const deletedJob = await jobModel.deleteJobById(id);
+        if (!deletedJob) {
+            return res.status(404).json({ error: 'Job not found' });
+        }
+
+        logger.info(`Job deleted with id: ${id}`);
+        // Return the deletion status to the user
+        res.status(200).json({ message: 'Job deleted successfully' });
+    } catch (error) {
+        logger.error(`Error deleting job: ${error}`);
+        res.status(500).json({
+            error: 'An error occurred while deleting the job',
+        });
+    }
+}
+
 module.exports = {
     createJob,
     getJobStatus,
     getThumbnail,
     listJobs,
+    deleteJobById,
 };
