@@ -1,23 +1,33 @@
 version: '3'
 services:
-  api:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  app:
+    image: node:18
+    working_dir: /app
     ports:
       - '3000:3000'
     depends_on:
       - rabbitmq
       - mongodb
+    environment:
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongodb:27017
+      - DB_NAME=job-app
+      - COLLECTION_NAME=jobs
+      - RABBITMQ_URI=amqp://rabbitmq:5672
+      - QUEUE_NAME=jobs
+      - IS_WORKER_RUNNING=false
+    volumes:
+      - .:/app
+    command: npm start
 
   rabbitmq:
-    image: rabbitmq:3-management
+    image: rabbitmq:latest
     ports:
       - '5672:5672'
       - '15672:15672'
 
   mongodb:
-    image: mongo
+    image: mongo:latest
     ports:
       - '27017:27017'
     volumes:
