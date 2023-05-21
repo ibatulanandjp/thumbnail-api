@@ -1,7 +1,10 @@
 const { fork } = require('child_process');
 const amqp = require('amqplib');
 const logger = require('../../logging/config/logger');
-const { uri, queueName } = require('../config/messagebroker');
+require('dotenv').config({ path: __dirname + './../../src/config/.env' });
+
+let uri = process.env.RABBITMQ_URI;
+let queueName = process.env.QUEUE_NAME;
 
 let connection, channel;
 let worker;

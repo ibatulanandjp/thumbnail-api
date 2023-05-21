@@ -1,6 +1,10 @@
 const { MongoClient, ObjectId } = require('mongodb');
 const logger = require('../../logging/config/logger');
-const { uri, dbName, collectionName } = require('../config/db');
+require('dotenv').config({ path: __dirname + './../../src/config/.env' });
+
+let uri = process.env.MONGODB_URI;
+let dbName = process.env.DB_NAME;
+let collectionName = process.env.COLLECTION_NAME;
 
 /**
  * Function to connect to the MongoDB and return database connection

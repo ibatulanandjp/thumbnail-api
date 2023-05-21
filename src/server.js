@@ -3,6 +3,7 @@
 const app = require('./app');
 const { connect } = require('./jobs/queue');
 const logger = require('../logging/config/logger');
+require('dotenv').config({ path: __dirname + './../src/config/.env' });
 
 // Start the server
 const port = process.env.PORT || 3000;

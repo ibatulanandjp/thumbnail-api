@@ -2,11 +2,11 @@ const jobModel = require('../models/job');
 const { generateThumbnail } = require('../services/thumbnailService');
 const { readImageFile } = require('../services/fileService');
 const path = require('path');
-
 const { connect } = require('./queue');
-const { queueName } = require('../config/messagebroker');
 const logger = require('../../logging/config/logger');
+require('dotenv').config({ path: __dirname + './../../src/config/.env' });
 
+let queueName = process.env.QUEUE_NAME;
 let channel;
 
 /**
