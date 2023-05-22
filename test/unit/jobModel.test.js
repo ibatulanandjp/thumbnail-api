@@ -1,5 +1,6 @@
 const jobModel = require('../../src/models/job');
 const { MongoClient, ObjectId } = require('mongodb');
+require('dotenv').config({ path: __dirname + './../../src/config/.env' });
 
 jest.mock('mongodb');
 
@@ -19,9 +20,9 @@ describe('Job Model', () => {
 
     // Before Each Test
     beforeEach(() => {
-        uri = 'mongodb://127.0.0.1:27017';
-        collectionName = 'job-app';
-        dbName = 'jobs';
+        uri = process.env.MONGODB_URI;
+        collectionName = process.env.COLLECTION_NAME;
+        dbName = process.env.DB_NAME;
 
         dbMock = {
             collection: jest.fn().mockReturnThis(),

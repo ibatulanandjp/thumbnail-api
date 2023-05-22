@@ -4,14 +4,22 @@ const path = require('path');
 const queue = require('../../src/jobs/queue');
 require('../../src/jobs/worker');
 
+// Mock the logger functions
+jest.mock('../../logging/config/logger', () => {
+    const infoMock = jest.fn();
+    const errorMock = jest.fn();
+    return {
+        info: infoMock,
+        error: errorMock,
+    };
+});
+
 describe('Integration Test', () => {
     let server;
     let jobId;
 
     beforeAll(() => {
-        server = app.listen(4000, () => {
-            console.log('Server started on port 4000');
-        });
+        server = app.listen(4000);
     });
 
     afterAll(async () => {
