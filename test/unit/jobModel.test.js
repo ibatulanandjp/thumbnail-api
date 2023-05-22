@@ -69,8 +69,8 @@ describe('Job Model', () => {
             expect(MongoClient.connect).toHaveBeenCalledWith(uri);
 
             // Check if the database functions are called with expected parameters
-            expect(clientMock.db).toHaveBeenCalledWith(collectionName);
-            expect(dbMock.collection).toHaveBeenCalledWith(dbName);
+            expect(clientMock.db).toHaveBeenCalledWith(dbName);
+            expect(dbMock.collection).toHaveBeenCalledWith(collectionName);
             expect(dbMock.insertOne).toHaveBeenCalledWith({
                 imageFilename,
                 status: 'processing',
@@ -117,8 +117,8 @@ describe('Job Model', () => {
             expect(MongoClient.connect).toHaveBeenCalledWith(uri);
 
             // Check if the database functions are called with expected parameters
-            expect(clientMock.db).toHaveBeenCalledWith(collectionName);
-            expect(dbMock.collection).toHaveBeenCalledWith(dbName);
+            expect(clientMock.db).toHaveBeenCalledWith(dbName);
+            expect(dbMock.collection).toHaveBeenCalledWith(collectionName);
             expect(dbMock.findOne).toHaveBeenCalledWith({
                 _id: expect.any(ObjectId),
             });
@@ -161,8 +161,8 @@ describe('Job Model', () => {
             expect(MongoClient.connect).toHaveBeenCalledWith(uri);
 
             // Check if the database functions are called with expected parameters
-            expect(clientMock.db).toHaveBeenCalledWith(collectionName);
-            expect(dbMock.collection).toHaveBeenCalledWith(dbName);
+            expect(clientMock.db).toHaveBeenCalledWith(dbName);
+            expect(dbMock.collection).toHaveBeenCalledWith(collectionName);
             expect(dbMock.updateOne).toHaveBeenCalledWith(
                 {
                     _id: expect.any(ObjectId),
@@ -219,8 +219,8 @@ describe('Job Model', () => {
             expect(MongoClient.connect).toHaveBeenCalledWith(uri);
 
             // Check if the database functions are called with expected parameters
-            expect(clientMock.db).toHaveBeenCalledWith(collectionName);
-            expect(dbMock.collection).toHaveBeenCalledWith(dbName);
+            expect(clientMock.db).toHaveBeenCalledWith(dbName);
+            expect(dbMock.collection).toHaveBeenCalledWith(collectionName);
             expect(dbMock.find).toHaveBeenCalled();
             expect(dbMock.toArray).toHaveBeenCalled();
 
