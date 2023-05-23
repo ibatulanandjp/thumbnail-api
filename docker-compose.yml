@@ -8,14 +8,8 @@ services:
     depends_on:
       - rabbitmq
       - mongodb
-    environment:
-      - PORT=3000
-      - MONGODB_URI=mongodb://mongodb:27017
-      - DB_NAME=job-app
-      - COLLECTION_NAME=jobs
-      - RABBITMQ_URI=amqp://rabbitmq:5672
-      - QUEUE_NAME=jobs
-      - IS_WORKER_RUNNING=false
+    env_file:
+      - ./src/config/.env
     volumes:
       - .:/app
     command: npm start
