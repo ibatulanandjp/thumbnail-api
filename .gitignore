@@ -130,4 +130,5 @@ dist
 .pnp.*
 
 # Public folder
-public
+public/thumbnails/*.jpg
+public/uploads/*.jpg
