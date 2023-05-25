@@ -27,7 +27,7 @@ A long-running job API for generating thumbnails of Emojis.
 
 The engineers at Cogent Labs like to create custom emojis for their communication apps, which requires them to create many small thumbnail images. "EmojiThumb" is a long-running job API that accepts image files, generates thumbnails, and allows users to fetch the thumbnails once the processing is complete.
 
-With "EmojiThumb," engineers can easily upload their image files and receive optimized thumbnails tailored for their communication apps. The API provides a seamless and efficient way to generate custom emojis, enhancing the communication experience for Cogent Labs' users.
+With "EmojiThumb," engineers can easily upload their image files and receive optimized thumbnails tailored for their communication apps. The API provides a seamless and efficient way to generate custom emojis, enhancing the communication experience of users.
 
 &nbsp;
 
@@ -45,7 +45,7 @@ With "EmojiThumb," engineers can easily upload their image files and receive opt
    ```
 
 2. Setup Environment Variable
-   - Create a `.env` file in directory `/thumbnail-api/src/config` and define the following variables:
+   - Create a `.env` file in directory `/thumbnail-api/src/config` and define the following variables (if not already present):
         ```
         PORT=3000
         MONGODB_URI=mongodb://mongodb:27017
@@ -166,12 +166,17 @@ To run the tests of the project, follow these steps:
 
 1. Ensure that the Docker containers are running using the following command:
    ```
+   docker ps -a
+   ```
+
+   If not, then start the containers with the following command:
+   ```
    docker compose up --build -d
    ```
 
 2. Access the running container and run the test inside the container, by executing the following command:
    ```
-   docker exec -it <container_name> npm test
+   docker exec -it <node_app_container_name> npm test
    ```
    e.g.
    ```
@@ -190,7 +195,7 @@ To achieve a long-running job API, this project uses a queue-based worker archit
 2. Job Queue: A RabbitMQ message queue to store incoming job requests.
 3. Worker: A separate process that listens to the job queue, processes the jobs, and generates thumbnails.
 4. Database: A MongoDB database to store job statuses and related information.
-5. Storage: A location in local file system to save the original images and generated thumbnails.
+5. Storage: A location in local file system (/public directory, in this case) to save the original images and generated thumbnails.
 
 ### Technologies used to implement the solution:
 - Language: JavaScript
@@ -220,17 +225,22 @@ To achieve a long-running job API, this project uses a queue-based worker archit
 
 During the development of the project, the following trade-offs were made:
 
-- Trade-off 1: Due to time constraints, certain features or optimizations were left out. These can be further developed in the future.
-- Trade-off 2: The system currently runs on a single instance, but to put it into production, it would need to be deployed in a clustered environment to ensure high availability and fault tolerance.
-- Trade-off 3: Load testing and performance optimization were not extensively conducted, but they are important considerations for handling high loads of requests.
-- Trade-off 4: Monitoring and management tools such as metrics collection, and alerting were not implemented in the current version. These can be integrated in future iterations for better observability.
+1. Simplified Error Handling: Error handling has been implemented to handle common scenarios, but it may not cover all edge cases. Comprehensive error handling and error recovery mechanisms could be added to make the system more robust.
+2. Basic Authentication: The project currently does not include an authentication mechanism for API endpoints. Implementing a secure authentication system, such as JWT-based authentication, could enhance the security of the application.
+3. Limited Error Logging: While the project logs basic error messages, a more sophisticated logging system could be implemented to capture detailed logs, including request/response data and error traces, to facilitate debugging and monitoring.
+4. Limited Validation: The input data validation in this project is kept minimal to demonstrate the core functionality. Depending on the specific use cases and requirements, additional validation checks and data sanitization could be added to enhance the overall robustness of the system.
+5. Single Node Deployment: The current deployment of the system assumes a single node setup, where all components (API server, message broker, and database) are running on a single machine. This may limit scalability and fault tolerance. To achieve higher availability and scalability, the system can be redesigned to support distributed deployment with load balancing, replication, and sharding techniques.
+
 
 Future improvements for the project include:
 
-- Improvement 1: Implementing a caching layer to improve the system's performance and reduce database load.
-- Improvement 2: Adding authentication and authorization mechanisms to secure the API endpoints.
-- Improvement 3: Implementing extensive automated tests to ensure code quality and prevent regressions.
-- Improvement 4: Scaling the system horizontally by introducing load balancers and multiple instances of the API server to handle increased traffic.
+1. Enhanced Testing: Expanding the test suite to cover more scenarios, including edge cases and negative testing, to ensure comprehensive test coverage and improve the reliability of the application.
+2. Scalability and Load Balancing: To handle a high load of requests, the application could be scaled horizontally by deploying multiple instances and utilizing a load balancer to distribute incoming traffic across these instances. This would help improve performance and ensure high availability.
+3. Caching: Implementing a caching layer, such as Redis, to improve the performance of frequently accessed data and reduce the load on the database, resulting in faster response times and better scalability.
+4. Monitoring and Logging: Implementing a robust monitoring and logging solution would allow for better visibility into the application's performance, resource usage, and error tracking. Tools like Prometheus, Grafana, or ELK (Elasticsearch, Logstash, Kibana) stack can be used to gather metrics and logs for analysis.
+5. Security Enhancements: Strengthen security measures by implementing additional authentication and authorization mechanisms, securing sensitive data using encryption techniques, and conducting regular security audits to identify and address potential vulnerabilities.
+6. Container Orchestration: Considering deploying the application using container orchestration platforms like Kubernetes to enable better scalability, fault tolerance, and easier management of the application in a production environment.
+7. Continuous Integration and Deployment (CI/CD): Implement a CI/CD pipeline to automate the build, testing, and deployment processes. This would enable faster iterations, better code quality control, and easier release management.
 
 &nbsp;
 
@@ -239,11 +249,16 @@ Future improvements for the project include:
 
 The future implementation scope includes:
 
-- Implementing error handling and retry mechanisms for robustness.
-- Incorporating input validation and sanitization to ensure data integrity and security.
-- Enhancing the logging mechanism to capture detailed information for debugging and monitoring purposes.
-- Implementing backup and disaster recovery strategies for the database.
-- Implementing container orchestration tools like Kubernetes for managing the deployment and scaling of containers.
+1. User Authentication and Authorization: Implement user authentication and authorization mechanisms to secure API endpoints and restrict access to certain functionalities based on user roles and permissions.
+2. User Management: Extend the system to include user management features such as user registration, profile management, and password reset functionality.
+3. Image Processing Enhancements: Explore additional image processing capabilities such as resizing, cropping, filtering, or adding watermarks to provide a more comprehensive image manipulation service.
+4. Advanced Queue Management: Enhance the message queue system by utilizing features like message priorities, delayed messages, or dead-letter queues for better control and management of job processing.
+5. Search Functionality: Integrate search functionality to allow users to search for specific images or filter images based on tags, metadata, or other criteria.
+6. Notification System: Implement a notification system to send notifications to users when certain events occur, such as successful image uploads, image processing completion, or system maintenance updates.
+7. Rate Limiting: Introduce rate limiting mechanisms to protect the API endpoints from abuse or excessive requests. This can help prevent potential Denial of Service (DoS) attacks and ensure fair usage of system resources.
+8. Data Replication and Backup: Set up data replication and backup strategies to ensure data durability and disaster recovery. This could involve implementing database replication, periodic backups, and off-site storage of backups to protect against data loss.
+9. Container Orchestration and Deployment: Utilize container orchestration platforms like Kubernetes to deploy and manage the application in a distributed environment, providing scalability, fault tolerance, and easy scaling options.
+10. Integration with External Services: Integrate with third-party services such as cloud storage providers, CDN (Content Delivery Network) services, or image recognition APIs to enhance the application's capabilities and provide additional value to users.
 
 &nbsp;
 
