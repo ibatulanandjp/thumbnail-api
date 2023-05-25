@@ -68,6 +68,11 @@ With "EmojiThumb," engineers can easily upload their image files and receive opt
    docker compose up --build -d
    ```
 
+4. Confirm that the containers are up-and-running:
+   ```
+   docker ps -a
+   ```
+
 &nbsp;
 
 ## Usage
