@@ -15,6 +15,7 @@ Author: [Atul Anand](https://www.linkedin.com/in/ibatulanand/)
     - [Installation and Setup](#installation-and-setup)
   - [Usage](#usage)
   - [Running Tests](#running-tests)
+  - [Environment Cleanup](#environment-cleanup)
   - [Architecture](#architecture)
     - [Solution Structure](#solution-structure)
     - [Technologies used to implement the solution:](#technologies-used-to-implement-the-solution)
@@ -73,6 +74,8 @@ With "EmojiThumb," engineers can easily upload their image files and receive opt
 
 The system should now be up and running. You can access the API endpoints and interact with the system using tools like Postman or cURL.
 
+NOTE: A sample image (emoji :D) is located at `thumbnail-api/images/image.jpg` for testing the application usage.
+
 - API endpoints:
   - Endpoint 1: CreateJob
     - Description: Endpoint to create a thumbnail generation job, by uploading an image
@@ -82,8 +85,15 @@ The system should now be up and running. You can access the API endpoints and in
       - Request:
         ```
         curl --location '127.0.0.1:3000/api/upload' \
-        --form 'image=@"path/to/image.jpg"'
+        --form 'image=@"</path/to/image.jpg>"'
         ```
+
+        e.g.
+        ```
+        curl --location '127.0.0.1:3000/api/upload' \
+        --form 'image=@"./images/image.jpg"'
+        ```
+
       - Response:
         ```
         {
@@ -100,6 +110,11 @@ The system should now be up and running. You can access the API endpoints and in
     - Path: `/api/job/:id/`
     - cURL:
       - Request:
+        ```
+        curl --location '127.0.0.1:3000/api/job/<jobId>'
+        ```
+
+        e.g.
         ```
         curl --location '127.0.0.1:3000/api/job/646cc03067cd6aff9f9b1539'
         ```
@@ -120,9 +135,16 @@ The system should now be up and running. You can access the API endpoints and in
     - cURL:
       - Request:
         ```
-        curl --location '127.0.0.1:3000/api/job/646cc03067cd6aff9f9b1539/thumbnail' \
-        --output '/path/to/thumbnail-output.jpg'
+        curl --location '127.0.0.1:3000/api/job/<jobId>/thumbnail' \
+        --output '</path/to/thumbnail-output.jpg>'
         ```
+
+        e.g.
+        ```
+        curl --location '127.0.0.1:3000/api/job/646cc03067cd6aff9f9b1539/thumbnail' \
+        --output './images/thumbnail-output.jpg'
+        ```
+
       - Response:
         ```
           (Downloads the output thumbnail image at location '/path/to/thumbnail-output.jpg')
@@ -167,6 +189,11 @@ The system should now be up and running. You can access the API endpoints and in
     - cURL:
       - Request:
         ```
+        curl --location --request DELETE '127.0.0.1:3000/api/job/<jobId>'
+        ```
+
+        e.g.
+        ```
         curl --location --request DELETE '127.0.0.1:3000/api/job/646cc03067cd6aff9f9b1539'
         ```
       - Response:
@@ -200,10 +227,10 @@ To run the tests of the project, follow these steps:
    docker ps -a
    ```
 
-   If not, then start the containers with the following command:
-   ```
-   docker compose up --build -d
-   ```
+   - If not, then start the containers with the following command:
+      ```
+      docker compose up --build -d
+      ```
 
 2. Access the running container and run the test inside the container, by executing the following command:
    ```
@@ -216,6 +243,15 @@ To run the tests of the project, follow these steps:
 
 &nbsp;
 
+
+## Environment Cleanup 
+
+- To completely stop and remove the containers and other resources (volume, network, etc.), run the following command:
+  ```
+  docker compose down -v
+  ```
+
+&nbsp;
 
 ## Architecture
 
