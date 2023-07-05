@@ -9,31 +9,139 @@ Author: [Atul Anand](https://www.linkedin.com/in/ibatulanand/)
 
 - [EmojiThumb: Emoji Thumbnail API](#emojithumb-emoji-thumbnail-api)
   - [Table of Contents](#table-of-contents)
-  - [Introduction](#introduction)
+  - [Solution Overview](#solution-overview)
+    - [Solution Architecture](#solution-architecture)
+    - [Tech Stack Used](#tech-stack-used)
   - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
     - [Installation and Setup](#installation-and-setup)
   - [Usage](#usage)
-  - [Running Tests](#running-tests)
-  - [Environment Cleanup](#environment-cleanup)
-  - [Architecture](#architecture)
-    - [Solution Structure](#solution-structure)
-    - [Technologies used to implement the solution:](#technologies-used-to-implement-the-solution)
-    - [Libraries/Packages used in the project:](#librariespackages-used-in-the-project)
-  - [Trade-offs and Future Improvements](#trade-offs-and-future-improvements)
-  - [Future Implementation Scope](#future-implementation-scope)
-  - [Deployment \& Management in Production](#deployment--management-in-production)
+    - [Deployment](#deployment)
+    - [Running Tests](#running-tests)
+    - [Environment Cleanup](#environment-cleanup)
+  - [Other Information](#other-information)
+    - [Trade-offs](#trade-offs)
+    - [Future Implementation Scope](#future-implementation-scope)
+    - [Deployment \& Management in Production](#deployment--management-in-production)
+  - [Security](#security)
+  - [License](#license)
 
 
 &nbsp;
 
-## Introduction
+## Solution Overview
 
 The engineers at IBConnectApp like to create custom emojis for their communication apps, which requires them to create many small thumbnail images. "EmojiThumb" is a long-running job API that accepts image files, generates thumbnails, and allows users to fetch the thumbnails once the processing is complete.
 
 With "EmojiThumb," engineers can easily upload their image files and receive optimized thumbnails tailored for their communication apps. The API provides a seamless and efficient way to generate custom emojis, enhancing the communication experience of users.
 
-&nbsp;
+To achieve a long-running job API, this project uses a queue-based worker architecture. When a user submits an image, the API will enqueue a job request containing the image details. Worker will then process the jobs asynchronously and generate thumbnail. The job status will be stored in a database for easy retrieval. Once a job is completed, the thumbnail can be fetched using the API.
+
+### Solution Architecture
+
+![System Architecture](./images/Architecture_ThumbnailAPI.png)
+
+1. API Server: A NodeJS and ExpressJS based server that exposes endpoints for submitting images, checking job status, fetching thumbnails, listing all submitted jobs, and deleting job from the database.
+   1. Producer: A producer of job in the queue based on request from the user.
+   2. Consumer (Worker): A worker that listens to the job queue, processes the jobs, and generates thumbnails.
+   3. Thumbnail Service: A Service for generating thumbnail using Sharp Image Processing Library.
+   4. File Service: A Service for reading uploaded file as buffer for processing.
+2. Message Queue: A RabbitMQ message queue to store incoming job requests.
+3. Database: A MongoDB database to store job statuses and related information.
+4. Storage: A location in local file system (/public directory, in this case) to save the original images and generated thumbnails.
+
+### Tech Stack Used
+<div>
+    <table>
+        <tr>
+            <td>
+                <strong>Languages</strong>
+            </td>
+            <td>
+                <a href="https://www.javascript.com/en/">
+                    <img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-323330?style=flat&logo=javascript&logoColor=F7DF1E"/>
+                </a>
+                &emsp;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Backend</strong>
+            </td>
+            <td>
+                <a href="https://nodejs.org/" target="_blank">
+                    <img alt="Node JS" src="https://img.shields.io/badge/Node.js-43853D?style=flat&logo=node.js&logoColor=white">
+                </a> 
+                &emsp;
+                <a href="https://express.io/" target="_blank"> 
+                    <img alt="Express JS" src="https://img.shields.io/badge/Express.js-303030?style=flat&logo=express.js&logoColor=white"/>
+                </a>
+                &emsp;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Libraries/Packages</strong>
+            </td>
+            <td>
+                <a href="https://sharp.pixelplumbing.com/">
+                    <img alt="Sharp" src="https://img.shields.io/badge/Sharp-323330?style=flat&logo=sharp&logoColor=99CC00"/>
+                </a>
+                &emsp;
+                <a href="https://www.npmjs.com/package//winston" target="_blank"> 
+                    <img alt="Winston" src="https://img.shields.io/badge/Winston-CB3837?style=flat&logo=winston&logoColor=white"/>
+                </a>
+                &emsp;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Database</strong>
+            </td>
+            <td>
+                <a href="https://mongodb.io/" target="_blank"> 
+                    <img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-4EA94B?style=flat&logo=mongodb&logoColor=white"/>
+                </a>
+                &emsp;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Message Broker (Queue)</strong>
+            </td>
+            <td>
+                <a href="https://www.rabbitmq.com/" target="_blank"> 
+                    <img alt="RabbitMQ" src="https://img.shields.io/badge/rabbitmq-FF6600.svg?&style=flat&logo=rabbitmq&logoColor=white"/>
+                </a>
+                &emsp;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Testing Framework</strong>
+            </td>
+            <td>
+                <a href="https://jestjs.io/" target="_blank"> 
+                    <img alt="Jest" src="https://img.shields.io/badge/Jest-DF162B.svg?&style=flat&logo=jest&logoColor=white"/>
+                </a>
+                &emsp;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Others</strong>
+            </td>
+            <td>
+                <a href="https://www.docker.com/" target="_blank"> 
+                    <img alt="Docker" src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white"/>
+                </a>
+                &emsp;
+            </td>
+        </tr>
+    </table>
+</div>
+</br>
+
 
 ## Getting Started
 
@@ -76,6 +184,8 @@ With "EmojiThumb," engineers can easily upload their image files and receive opt
 &nbsp;
 
 ## Usage
+
+### Deployment
 
 The system should now be up and running. You can access the API endpoints and interact with the system using tools like Postman or cURL.
 
@@ -223,7 +333,7 @@ NOTE: A sample image (emoji :D) is located at `thumbnail-api/images/image.jpg` f
 
 &nbsp;    
 
-## Running Tests
+### Running Tests
 
 To run the tests of the project, follow these steps:
 
@@ -249,7 +359,7 @@ To run the tests of the project, follow these steps:
 &nbsp;
 
 
-## Environment Cleanup 
+### Environment Cleanup 
 
 - To completely stop and remove the containers and other resources (volume, network, etc.), run the following command:
   ```
@@ -258,67 +368,24 @@ To run the tests of the project, follow these steps:
 
 &nbsp;
 
-## Architecture
+## Other Information
 
-To achieve a long-running job API, this project uses a queue-based worker architecture. When a user submits an image, the API will enqueue a job request containing the image details. Worker will then process the jobs asynchronously and generate thumbnail. The job status will be stored in a database for easy retrieval. Once a job is completed, the thumbnail can be fetched using the API.
-
-### Solution Structure
-1. API Server: An Express.js server that exposes endpoints for submitting images, checking job status, fetching thumbnails, listing all submitted jobs, and deleting job from the database.
-2. Job Queue: A RabbitMQ message queue to store incoming job requests.
-3. Worker: A separate process that listens to the job queue, processes the jobs, and generates thumbnails.
-4. Database: A MongoDB database to store job statuses and related information.
-5. Storage: A location in local file system (/public directory, in this case) to save the original images and generated thumbnails.
-
-### Technologies used to implement the solution:
-- Language: JavaScript
-- Framework: Node.js, Express.js
-- Message Broker (Queueing System): RabbitMQ
-- Database: MongoDB
-- Testing Framework: Jest
-- Thumbnail Processing: Sharp
-
-### Libraries/Packages used in the project:
-- express: Web framework for Node.js, used to create REST APIs.
-- mongodb: MongoDB driver, used to connect and store job related information into MongoDB database. 
-- amqplib: Node.js client for RabbitMQ, used as a message broker (queue) to process thumbnails asynchronously. 
-- multer: Middleware, used for handling image file uploads.
-- sharp: Image processing library, used to generate thumbnails.
-- uuid: Library, for generating unique identifiers (UUIDs) to attach to the original filename.
-- dotenv: Module, used to load environment variables from a .env file into process.env.
-- winston: Logging library, used for server logging.
-- winston-daily-rotate-file: Transport, to rotate logs files daily and keep a maximum of 7 days.
-- jest: JavaScript testing framework, used to write unit tests.
-- supertest: Testing library, used to test API endpoints.
-
-&nbsp;
-
-
-## Trade-offs and Future Improvements
+### Trade-offs
 
 During the development of the project, the following trade-offs were made:
 
 1. Allowed File Formats: Currently the project only supports images uploaded in the ".jpg" format.
-2. Simplified Error Handling: Error handling has been implemented to handle common scenarios, but it may not cover all edge cases. Comprehensive error handling and error recovery mechanisms could be added to make the system more robust.
-3. Basic Authentication: The project currently does not include an authentication mechanism for API endpoints. Implementing a secure authentication system, such as JWT-based authentication, could enhance the security of the application.
-4. Limited Error Logging: While the project logs basic error messages using Winston, a more sophisticated logging system could be implemented to capture detailed logs, including request/response data and error traces, to facilitate debugging and monitoring.
-5. Limited Validation: The input data validation in this project is kept minimal to demonstrate the core functionality. Depending on the specific use cases and requirements, additional validation checks and data sanitization could be added to enhance the overall robustness of the system.
-6. Single Node Deployment: The current deployment of the system assumes a single node setup, where all components (API server, message broker, and database) are running on a single machine. This may limit scalability and fault tolerance. To achieve higher availability and scalability, the system can be redesigned to support distributed deployment with load balancing, replication, and sharding techniques.
-
-
-Future improvements for the project include:
-
-1. Enhanced Testing: Expanding the test suite to cover more scenarios, including edge cases and negative testing, to ensure comprehensive test coverage and improve the reliability of the application.
-2. Scalability and Load Balancing: To handle a high load of requests, the application could be scaled horizontally by deploying multiple instances and utilizing a load balancer to distribute incoming traffic across these instances. This would help improve performance and ensure high availability.
-3. Caching: Implementing a caching layer, such as Redis, to improve the performance of frequently accessed data and reduce the load on the database, resulting in faster response times and better scalability.
-4. Monitoring and Logging: Implementing a robust monitoring and logging solution would allow for better visibility into the application's performance, resource usage, and error tracking. Tools like Prometheus, Grafana, or ELK (Elasticsearch, Logstash, Kibana) stack can be used to gather metrics and logs for analysis.
-5. Security Enhancements: Strengthen security measures by implementing additional authentication and authorization mechanisms, securing sensitive data using encryption techniques, and conducting regular security audits to identify and address potential vulnerabilities.
-6. Container Orchestration: Considering deploying the application using container orchestration platforms like Kubernetes to enable better scalability, fault tolerance, and easier management of the application in a production environment.
-7. Continuous Integration and Deployment (CI/CD): Implement a CI/CD pipeline to automate the build, testing, and deployment processes. This would enable faster iterations, better code quality control, and easier release management.
+2. Thumbnail Sizing: The size of the thumbnail to be generated is fixed for now. This can be changed to be passed as input from the user to generate thumbnails of different sizes. 
+3. Simplified Error Handling: Error handling has been implemented to handle common scenarios, but it may not cover all edge cases. Comprehensive error handling and error recovery mechanisms could be added to make the system more robust.
+4. Basic Authentication: The project currently does not include an authentication mechanism for API endpoints. Implementing a secure authentication system, such as JWT-based authentication, could enhance the security of the application.
+5. Limited Error Logging: While the project logs basic error messages using Winston, a more sophisticated logging system could be implemented to capture detailed logs, including request/response data and error traces, to facilitate debugging and monitoring.
+6. Limited Validation: The input data validation in this project is kept minimal to demonstrate the core functionality. Depending on the specific use cases and requirements, additional validation checks and data sanitization could be added to enhance the overall robustness of the system.
+7. Single Node Deployment: The current deployment of the system assumes a single node setup, where all components (API server, message broker, and database) are running on a single machine. This may limit scalability and fault tolerance. To achieve higher availability and scalability, the system can be redesigned to support distributed deployment with load balancing, replication, and sharding techniques.
 
 &nbsp;
 
 
-## Future Implementation Scope
+### Future Implementation Scope
 
 The future implementation scope includes:
 
@@ -336,7 +403,7 @@ The future implementation scope includes:
 &nbsp;
 
 
-## Deployment & Management in Production
+### Deployment & Management in Production
 
 For deploying and managing the containerized application in production, the following steps can be followed:
 
@@ -349,3 +416,10 @@ For deploying and managing the containerized application in production, the foll
 7. Regularly monitor the application's performance, conduct load testing, and perform necessary optimizations to ensure optimal performance and scalability.
 
 &nbsp;
+
+
+## Security
+See [CONTRIBUTING](CONTRIBUTING.md) for more information. 
+
+## License
+This library is licensed under the MIT-0 License. See the [LICENSE](LICENSE) file.
