@@ -1,39 +1,14 @@
 # EmojiThumb: Emoji Thumbnail API
 
 
-A long-running job API for generating thumbnails of Emojis.
+A long-running job API for generating thumbnails of Emojis - primarily using NodeJs, MongoDB, and RabbitMQ.
 
 Author: [Atul Anand](https://www.linkedin.com/in/ibatulanand/)
 
-## Table of Contents
-
-- [EmojiThumb: Emoji Thumbnail API](#emojithumb-emoji-thumbnail-api)
-  - [Table of Contents](#table-of-contents)
-  - [Solution Overview](#solution-overview)
-    - [Solution Architecture](#solution-architecture)
-    - [Tech Stack Used](#tech-stack-used)
-  - [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Installation and Setup](#installation-and-setup)
-  - [Usage](#usage)
-    - [Deployment](#deployment)
-    - [Running Tests](#running-tests)
-    - [Environment Cleanup](#environment-cleanup)
-  - [Other Information](#other-information)
-    - [Trade-offs](#trade-offs)
-    - [Future Implementation Scope](#future-implementation-scope)
-    - [Deployment \& Management in Production](#deployment--management-in-production)
-  - [Security](#security)
-  - [License](#license)
-
-
-&nbsp;
-
 ## Solution Overview
 
-The engineers at IBConnectApp like to create custom emojis for their communication apps, which requires them to create many small thumbnail images. "EmojiThumb" is a long-running job API that accepts image files, generates thumbnails, and allows users to fetch the thumbnails once the processing is complete.
-
-With "EmojiThumb," engineers can easily upload their image files and receive optimized thumbnails tailored for their communication apps. The API provides a seamless and efficient way to generate custom emojis, enhancing the communication experience of users.
+"EmojiThumb" is a long-running job API that accepts image files, generates thumbnails, and allows users to fetch the thumbnails once the processing is complete.
+The API provides a seamless and efficient way to generate custom emojis, enhancing the communication experience of users.
 
 To achieve a long-running job API, this project uses a queue-based worker architecture. When a user submits an image, the API will enqueue a job request containing the image details. Worker will then process the jobs asynchronously and generate thumbnail. The job status will be stored in a database for easy retrieval. Once a job is completed, the thumbnail can be fetched using the API.
 
@@ -376,11 +351,8 @@ During the development of the project, the following trade-offs were made:
 
 1. Allowed File Formats: Currently the project only supports images uploaded in the ".jpg" format.
 2. Thumbnail Sizing: The size of the thumbnail to be generated is fixed for now. This can be changed to be passed as input from the user to generate thumbnails of different sizes. 
-3. Simplified Error Handling: Error handling has been implemented to handle common scenarios, but it may not cover all edge cases. Comprehensive error handling and error recovery mechanisms could be added to make the system more robust.
-4. Basic Authentication: The project currently does not include an authentication mechanism for API endpoints. Implementing a secure authentication system, such as JWT-based authentication, could enhance the security of the application.
-5. Limited Error Logging: While the project logs basic error messages using Winston, a more sophisticated logging system could be implemented to capture detailed logs, including request/response data and error traces, to facilitate debugging and monitoring.
-6. Limited Validation: The input data validation in this project is kept minimal to demonstrate the core functionality. Depending on the specific use cases and requirements, additional validation checks and data sanitization could be added to enhance the overall robustness of the system.
-7. Single Node Deployment: The current deployment of the system assumes a single node setup, where all components (API server, message broker, and database) are running on a single machine. This may limit scalability and fault tolerance. To achieve higher availability and scalability, the system can be redesigned to support distributed deployment with load balancing, replication, and sharding techniques.
+3. Basic Authentication: The project currently does not include an authentication mechanism for API endpoints. Implementing a secure authentication system, such as JWT-based authentication, could enhance the security of the application.
+4. Simplified Error Handling: Error handling has been implemented to handle common scenarios, but it may not cover all edge cases. Comprehensive error handling and error recovery mechanisms could be added to make the system more robust.
 
 &nbsp;
 
@@ -395,10 +367,6 @@ The future implementation scope includes:
 4. Advanced Queue Management: Enhance the message queue system by utilizing features like message priorities, delayed messages, or dead-letter queues for better control and management of job processing.
 5. Search Functionality: Integrate search functionality to allow users to search for specific images or filter images based on tags, metadata, or other criteria.
 6. Notification System: Implement a notification system to send notifications to users when certain events occur, such as successful image uploads, image processing completion, or system maintenance updates.
-7. Rate Limiting: Introduce rate limiting mechanisms to protect the API endpoints from abuse or excessive requests. This can help prevent potential Denial of Service (DoS) attacks and ensure fair usage of system resources.
-8. Data Replication and Backup: Set up data replication and backup strategies to ensure data durability and disaster recovery. This could involve implementing database replication, periodic backups, and off-site storage of backups to protect against data loss.
-9. Container Orchestration and Deployment: Utilize container orchestration platforms like Kubernetes to deploy and manage the application in a distributed environment, providing scalability, fault tolerance, and easy scaling options.
-10. Integration with External Services: Integrate with third-party services such as cloud storage providers, CDN (Content Delivery Network) services, or image recognition APIs to enhance the application's capabilities and provide additional value to users.
 
 &nbsp;
 
