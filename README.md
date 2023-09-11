@@ -1,39 +1,14 @@
 # EmojiThumb: Emoji Thumbnail API
 
 
-A long-running job API for generating thumbnails of Emojis.
+A long-running job API for generating thumbnails of Emojis - primarily using NodeJs, MongoDB, and RabbitMQ.
 
 Author: [Atul Anand](https://www.linkedin.com/in/ibatulanand/)
 
-## Table of Contents
-
-- [EmojiThumb: Emoji Thumbnail API](#emojithumb-emoji-thumbnail-api)
-  - [Table of Contents](#table-of-contents)
-  - [Solution Overview](#solution-overview)
-    - [Solution Architecture](#solution-architecture)
-    - [Tech Stack Used](#tech-stack-used)
-  - [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Installation and Setup](#installation-and-setup)
-  - [Usage](#usage)
-    - [Deployment](#deployment)
-    - [Running Tests](#running-tests)
-    - [Environment Cleanup](#environment-cleanup)
-  - [Other Information](#other-information)
-    - [Trade-offs](#trade-offs)
-    - [Future Implementation Scope](#future-implementation-scope)
-    - [Deployment \& Management in Production](#deployment--management-in-production)
-  - [Security](#security)
-  - [License](#license)
-
-
-&nbsp;
-
 ## Solution Overview
 
-The engineers at IBConnectApp like to create custom emojis for their communication apps, which requires them to create many small thumbnail images. "EmojiThumb" is a long-running job API that accepts image files, generates thumbnails, and allows users to fetch the thumbnails once the processing is complete.
-
-With "EmojiThumb," engineers can easily upload their image files and receive optimized thumbnails tailored for their communication apps. The API provides a seamless and efficient way to generate custom emojis, enhancing the communication experience of users.
+"EmojiThumb" is a long-running job API that accepts image files, generates thumbnails, and allows users to fetch the thumbnails once the processing is complete.
+The API provides a seamless and efficient way to generate custom emojis, enhancing the communication experience of users.
 
 To achieve a long-running job API, this project uses a queue-based worker architecture. When a user submits an image, the API will enqueue a job request containing the image details. Worker will then process the jobs asynchronously and generate thumbnail. The job status will be stored in a database for easy retrieval. Once a job is completed, the thumbnail can be fetched using the API.
 
