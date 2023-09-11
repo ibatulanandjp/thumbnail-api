@@ -351,11 +351,8 @@ During the development of the project, the following trade-offs were made:
 
 1. Allowed File Formats: Currently the project only supports images uploaded in the ".jpg" format.
 2. Thumbnail Sizing: The size of the thumbnail to be generated is fixed for now. This can be changed to be passed as input from the user to generate thumbnails of different sizes. 
-3. Simplified Error Handling: Error handling has been implemented to handle common scenarios, but it may not cover all edge cases. Comprehensive error handling and error recovery mechanisms could be added to make the system more robust.
-4. Basic Authentication: The project currently does not include an authentication mechanism for API endpoints. Implementing a secure authentication system, such as JWT-based authentication, could enhance the security of the application.
-5. Limited Error Logging: While the project logs basic error messages using Winston, a more sophisticated logging system could be implemented to capture detailed logs, including request/response data and error traces, to facilitate debugging and monitoring.
-6. Limited Validation: The input data validation in this project is kept minimal to demonstrate the core functionality. Depending on the specific use cases and requirements, additional validation checks and data sanitization could be added to enhance the overall robustness of the system.
-7. Single Node Deployment: The current deployment of the system assumes a single node setup, where all components (API server, message broker, and database) are running on a single machine. This may limit scalability and fault tolerance. To achieve higher availability and scalability, the system can be redesigned to support distributed deployment with load balancing, replication, and sharding techniques.
+3. Basic Authentication: The project currently does not include an authentication mechanism for API endpoints. Implementing a secure authentication system, such as JWT-based authentication, could enhance the security of the application.
+4. Simplified Error Handling: Error handling has been implemented to handle common scenarios, but it may not cover all edge cases. Comprehensive error handling and error recovery mechanisms could be added to make the system more robust.
 
 &nbsp;
 
@@ -370,10 +367,6 @@ The future implementation scope includes:
 4. Advanced Queue Management: Enhance the message queue system by utilizing features like message priorities, delayed messages, or dead-letter queues for better control and management of job processing.
 5. Search Functionality: Integrate search functionality to allow users to search for specific images or filter images based on tags, metadata, or other criteria.
 6. Notification System: Implement a notification system to send notifications to users when certain events occur, such as successful image uploads, image processing completion, or system maintenance updates.
-7. Rate Limiting: Introduce rate limiting mechanisms to protect the API endpoints from abuse or excessive requests. This can help prevent potential Denial of Service (DoS) attacks and ensure fair usage of system resources.
-8. Data Replication and Backup: Set up data replication and backup strategies to ensure data durability and disaster recovery. This could involve implementing database replication, periodic backups, and off-site storage of backups to protect against data loss.
-9. Container Orchestration and Deployment: Utilize container orchestration platforms like Kubernetes to deploy and manage the application in a distributed environment, providing scalability, fault tolerance, and easy scaling options.
-10. Integration with External Services: Integrate with third-party services such as cloud storage providers, CDN (Content Delivery Network) services, or image recognition APIs to enhance the application's capabilities and provide additional value to users.
 
 &nbsp;
 
