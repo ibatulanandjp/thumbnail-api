@@ -125,7 +125,7 @@ To achieve a long-running job API, this project uses a queue-based worker archit
 - Docker and Docker Compose should be installed.
 - Docker should be running.
 
-### Installation and Setup
+### Setup & Deployment
 
 1. Navigate to the project directory:
    ```
@@ -160,7 +160,7 @@ To achieve a long-running job API, this project uses a queue-based worker archit
 
 ## Usage
 
-### Deployment
+### Interacting with application
 
 The system should now be up and running. You can access the API endpoints and interact with the system using tools like Postman or cURL.
 
