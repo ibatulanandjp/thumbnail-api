@@ -14,7 +14,7 @@ To achieve a long-running job API, this project uses a queue-based worker archit
 
 ### Solution Architecture
 
-![System Architecture](./images/Architecture_ThumbnailAPI.png)
+![System Architecture](./images/ArchitectureThumbnailAPI.png)
 
 1. API Server: A NodeJS and ExpressJS based server that exposes endpoints for submitting images, checking job status, fetching thumbnails, listing all submitted jobs, and deleting job from the database.
    1. Producer: A producer of job in the queue based on request from the user.
